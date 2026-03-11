@@ -5,16 +5,20 @@ const response_type = 'code';
 const scope = 'email openid';
 
 export function get_login_url() {
-  const login_url =
+  return (
     `${cognito_domain}/login` +
     `?client_id=${client_id}` +
     `&response_type=${response_type}` +
     `&scope=${encodeURIComponent(scope)}` +
-    `&redirect_uri=${encodeURIComponent(redirect_uri)}`;
-
-  return login_url;
+    `&redirect_uri=${encodeURIComponent(redirect_uri)}`
+  );
 }
 
 export function redirect_to_login() {
   window.location.href = get_login_url();
+}
+
+export function get_auth_code() {
+  const url_params = new URLSearchParams(window.location.search);
+  return url_params.get('code');
 }

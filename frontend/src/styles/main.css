@@ -1,14 +1,39 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #f7f7f7;
+  background: #f3f3f3;
   color: #222;
 }
 
 .container {
-  max-width: 720px;
-  margin: 80px auto;
+  max-width: 760px;
+  margin: 60px auto;
   padding: 24px;
+  background: #ffffff;
+  border-radius: 16px;
+}
+
+section {
+  margin-top: 28px;
+}
+
+button {
+  padding: 10px 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
   background: #fff;
-  border-radius: 12px;
+  cursor: pointer;
+}
+
+input[type="file"] {
+  display: block;
+  margin-bottom: 12px;
+}
+
+pre {
+  padding: 16px;
+  background: #f7f7f7;
+  border-radius: 8px;
+  overflow-x: auto;
+  white-space: pre-wrap;
 }

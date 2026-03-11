@@ -10,8 +10,24 @@
   <main class="container">
     <h1>Oh My Money</h1>
     <p>OCR 기반 가계부 MVP</p>
-    <button id="login_button">로그인</button>
-    <p id="status_text"></p>
+
+    <section class="auth_section">
+      <button id="login_button">로그인</button>
+      <p id="status_text"></p>
+    </section>
+
+    <section class="upload_section">
+      <h2>영수증 업로드</h2>
+      <input id="receipt_file_input" type="file" accept="image/*,.pdf" />
+      <button id="upload_button">업로드</button>
+      <p id="file_name_text"></p>
+      <p id="upload_status_text"></p>
+    </section>
+
+    <section class="result_section">
+      <h2>OCR 결과</h2>
+      <pre id="ocr_result_box">아직 결과 없음</pre>
+    </section>
   </main>
 
   <script type="module" src="./src/js/app.js"></script>
