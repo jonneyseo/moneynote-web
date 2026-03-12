@@ -1,5 +1,7 @@
 import { redirect_to_login, get_auth_code } from './auth.js';
 
+const api_base_url = 'https://c1e30rr1se.execute-api.ca-central-1.amazonaws.com';
+
 const login_button = document.getElementById('login_button');
 const status_text = document.getElementById('status_text');
 const receipt_file_input = document.getElementById('receipt_file_input');
@@ -36,6 +38,45 @@ if (receipt_file_input) {
   });
 }
 
+async function request_upload_url(selected_file) {
+  const response = await fetch(`${api_base_url}/upload-url`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      file_name: selected_file.name,
+      content_type: selected_file.type
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to get upload URL: ${response.status}`);
+  }
+
+  const response_json = await response.json();
+
+  if (response_json.body) {
+    return JSON.parse(response_json.body);
+  }
+
+  return response_json;
+}
+
+async function upload_file_to_s3(upload_url, selected_file) {
+  const response = await fetch(upload_url, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': selected_file.type
+    },
+    body: selected_file
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to upload file to S3: ${response.status}`);
+  }
+}
+
 if (upload_button) {
   upload_button.addEventListener('click', async () => {
     const selected_file = receipt_file_input.files?.[0];
@@ -45,20 +86,30 @@ if (upload_button) {
       return;
     }
 
-    upload_status_text.textContent = '업로드 및 OCR 테스트 중...';
+    try {
+      upload_status_text.textContent = '업로드 URL 요청 중...';
+      ocr_result_box.textContent = '처리 시작';
 
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+      const upload_data = await request_upload_url(selected_file);
 
-    const mock_ocr_result = {
-      merchant_name: 'STARBUCKS',
-      transaction_date: '2026-03-11',
-      amount: 6500,
-      currency: 'KRW',
-      category: 'food',
-      source_file_name: selected_file.name
-    };
+      upload_status_text.textContent = 'S3 업로드 중...';
 
-    ocr_result_box.textContent = JSON.stringify(mock_ocr_result, null, 2);
-    upload_status_text.textContent = '임시 OCR 결과 표시 완료';
+      await upload_file_to_s3(upload_data.upload_url, selected_file);
+
+      upload_status_text.textContent = 'S3 업로드 완료';
+
+      ocr_result_box.textContent = JSON.stringify({
+        message: '파일이 S3에 업로드되었습니다.',
+        document_id: upload_data.document_id,
+        s3_key: upload_data.s3_key,
+        file_name: selected_file.name,
+        content_type: selected_file.type
+      }, null, 2);
+    } catch (error) {
+      upload_status_text.textContent = `에러: ${error.message}`;
+      ocr_result_box.textContent = JSON.stringify({
+        error: error.message
+      }, null, 2);
+    }
   });
 }
