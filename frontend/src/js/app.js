@@ -1,6 +1,7 @@
 import { redirect_to_login, get_auth_code } from './auth.js';
 
 const api_base_url = 'https://c1e30rr1se.execute-api.ca-central-1.amazonaws.com';
+const upload_bucket_name = 'moneynote-uploads-dev';
 
 const login_button = document.getElementById('login_button');
 const status_text = document.getElementById('status_text');
@@ -77,6 +78,31 @@ async function upload_file_to_s3(upload_url, selected_file) {
   }
 }
 
+async function process_receipt_ocr(s3_key) {
+  const response = await fetch(`${api_base_url}/ocr/process`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      bucket_name: upload_bucket_name,
+      s3_key
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to process OCR: ${response.status}`);
+  }
+
+  const response_json = await response.json();
+
+  if (response_json.body) {
+    return JSON.parse(response_json.body);
+  }
+
+  return response_json;
+}
+
 if (upload_button) {
   upload_button.addEventListener('click', async () => {
     const selected_file = receipt_file_input.files?.[0];
@@ -93,17 +119,16 @@ if (upload_button) {
       const upload_data = await request_upload_url(selected_file);
 
       upload_status_text.textContent = 'S3 업로드 중...';
-
       await upload_file_to_s3(upload_data.upload_url, selected_file);
 
-      upload_status_text.textContent = 'S3 업로드 완료';
+      upload_status_text.textContent = 'OCR 처리 중...';
+      const ocr_result = await process_receipt_ocr(upload_data.s3_key);
 
+      upload_status_text.textContent = 'OCR 처리 완료';
       ocr_result_box.textContent = JSON.stringify({
-        message: '파일이 S3에 업로드되었습니다.',
         document_id: upload_data.document_id,
         s3_key: upload_data.s3_key,
-        file_name: selected_file.name,
-        content_type: selected_file.type
+        ocr_result
       }, null, 2);
     } catch (error) {
       upload_status_text.textContent = `에러: ${error.message}`;
