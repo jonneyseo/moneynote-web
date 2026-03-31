@@ -3,11 +3,31 @@ import { useDispatch, useSelector } from 'react-redux';
 import { loadFromOcr, setField, setItemField, addItem, removeItem, resetReceipt } from '../store/receiptSlice';
 import { resetUpload } from '../store/uploadSlice';
 
+const CATEGORIES = [
+  { value: 'grocery', label: 'Grocery' },
+  { value: 'dining', label: 'Dining' },
+  { value: 'entertainment', label: 'Entertainment' },
+  { value: 'medical', label: 'Medical' },
+  { value: 'transport', label: 'Transport' },
+  { value: 'shopping', label: 'Shopping' },
+  { value: 'utilities', label: 'Utilities' },
+  { value: 'other', label: 'Other' },
+];
+
+const PAYMENT_METHODS = [
+  { value: 'amex', label: 'Amex' },
+  { value: 'mastercard', label: 'Mastercard' },
+  { value: 'visa', label: 'Visa' },
+  { value: 'debit', label: 'Debit' },
+  { value: 'cash', label: 'Cash' },
+  { value: 'other', label: 'Other' },
+];
+
 export default function ReviewForm() {
   const dispatch = useDispatch();
   const { status, result } = useSelector((state) => state.upload);
-  const { merchant, date, total, items, isParsed } = useSelector((state) => state.receipt);
-  const [saveStatus, setSaveStatus] = useState('idle'); // idle | saving | saved | error
+  const { merchant, date, total, items, category, payment_method, isParsed } = useSelector((state) => state.receipt);
+  const [saveStatus, setSaveStatus] = useState('idle');
 
   useEffect(() => {
     if (status === 'done' && result?.ocrResult && !isParsed) {
@@ -30,11 +50,12 @@ export default function ReviewForm() {
           date,
           total,
           items,
+          category,
+          payment_method,
         }),
       });
       if (!res.ok) throw new Error(`${res.status}`);
       setSaveStatus('saved');
-      // 2초 후 초기화해서 다음 영수증 찍을 수 있게
       setTimeout(() => {
         dispatch(resetReceipt());
         dispatch(resetUpload());
@@ -78,6 +99,33 @@ export default function ReviewForm() {
           placeholder="0.00"
           step="0.01"
         />
+      </div>
+
+      <div className="review-row">
+        <div className="review-field">
+          <label>카테고리</label>
+          <select
+            value={category}
+            onChange={(e) => dispatch(setField({ field: 'category', value: e.target.value }))}
+          >
+            {CATEGORIES.map(c => (
+              <option key={c.value} value={c.value}>{c.label}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className="review-field">
+          <label>결제수단</label>
+          <select
+            value={payment_method}
+            onChange={(e) => dispatch(setField({ field: 'payment_method', value: e.target.value }))}
+          >
+            <option value="">선택</option>
+            {PAYMENT_METHODS.map(p => (
+              <option key={p.value} value={p.value}>{p.label}</option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <div className="review-items">

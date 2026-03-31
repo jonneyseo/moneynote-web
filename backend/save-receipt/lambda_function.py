@@ -35,11 +35,12 @@ def lambda_handler(event, context):
         date = body.get("date", "")
         total = body.get("total")
         items = body.get("items", [])
+        category = body.get("category", "other")
+        payment_method = body.get("payment_method", "")
 
         if not document_id:
             return build_response(400, {"message": "document_id is required"}, origin)
 
-        # Sort key: date#document_id (날짜 기준 정렬 가능)
         date_prefix = date.replace("/", "-") if date else datetime.utcnow().strftime("%Y-%m-%d")
         transaction_key = f"{date_prefix}#{document_id}"
 
@@ -62,6 +63,8 @@ def lambda_handler(event, context):
             "date": date,
             "total": to_decimal(total) if total is not None else Decimal("0"),
             "items": serialized_items,
+            "category": category,
+            "payment_method": payment_method,
             "created_at": datetime.utcnow().isoformat()
         }
 

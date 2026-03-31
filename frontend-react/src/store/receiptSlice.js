@@ -6,12 +6,14 @@ const receiptSlice = createSlice({
     merchant: '',
     date: '',
     total: '',
-    items: [],        // [{ name, price }]
+    items: [],
+    category: 'other',
+    payment_method: '',
     isParsed: false,
   },
   reducers: {
     loadFromOcr(state, action) {
-      const { merchant, date, total, items } = action.payload;
+      const { merchant, date, total, items, category } = action.payload;
       state.merchant = merchant || '';
       state.date = date || '';
       state.total = total || '';
@@ -19,6 +21,8 @@ const receiptSlice = createSlice({
         name: item.name || '',
         price: item.price ?? '',
       }));
+      state.category = category || 'other';
+      state.payment_method = '';
       state.isParsed = true;
     },
     setField(state, action) {
@@ -40,6 +44,8 @@ const receiptSlice = createSlice({
       state.date = '';
       state.total = '';
       state.items = [];
+      state.category = 'other';
+      state.payment_method = '';
       state.isParsed = false;
     },
   },

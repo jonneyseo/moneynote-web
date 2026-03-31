@@ -10,8 +10,7 @@ body {
   color: #1a1a1a;
 }
 
-.login-page,
-.home-page {
+.login-page {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -19,6 +18,23 @@ body {
   justify-content: center;
   padding: 24px;
   gap: 16px;
+}
+
+.home-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 16px;
+  gap: 20px;
+}
+
+.upload-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
 }
 
 h1 {
@@ -171,4 +187,227 @@ h1 {
 
 .btn-save {
   margin-top: 4px;
+}
+
+/* Select inputs */
+.review-field select {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 1rem;
+  width: 100%;
+  outline: none;
+  background: #fff;
+  cursor: pointer;
+}
+
+.review-field select:focus {
+  border-color: #1a1a1a;
+}
+
+.review-row {
+  display: flex;
+  gap: 12px;
+}
+
+.review-row .review-field {
+  flex: 1;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 4px;
+  background: #e8e8e8;
+  border-radius: 10px;
+  padding: 4px;
+}
+
+.tab-btn {
+  flex: 1;
+  background: none;
+  border: none;
+  border-radius: 7px;
+  padding: 8px 24px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  color: #888;
+  transition: all 0.15s;
+}
+
+.tab-btn.active {
+  background: #fff;
+  color: #1a1a1a;
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* History */
+.history-page {
+  width: 100%;
+  max-width: 860px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.history-summary {
+  background: #1a1a1a;
+  color: #fff;
+  border-radius: 14px;
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.history-summary-label {
+  font-size: 0.85rem;
+  opacity: 0.6;
+  font-weight: 500;
+}
+
+.history-summary-amount {
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.history-table-wrap {
+  background: #fff;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.history-table thead th {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.history-table thead th.col-amount,
+.history-table tbody td.col-amount {
+  text-align: right;
+}
+
+.transaction-row td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #f5f5f5;
+  vertical-align: middle;
+}
+
+.transaction-row:last-child td {
+  border-bottom: none;
+}
+
+.transaction-row.is-open td {
+  border-bottom: none;
+}
+
+.col-date {
+  white-space: nowrap;
+  color: #555;
+  font-size: 0.85rem;
+}
+
+.col-merchant {
+  font-weight: 500;
+}
+
+.col-payment {
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.col-amount {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.col-toggle {
+  width: 36px;
+  text-align: center;
+}
+
+.btn-toggle {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  color: #aaa;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: transform 0.15s, color 0.15s;
+  line-height: 1;
+}
+
+.btn-toggle:hover {
+  color: #1a1a1a;
+}
+
+.btn-toggle.open {
+  transform: rotate(180deg);
+  color: #1a1a1a;
+}
+
+/* Category badges */
+.category-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.cat-grocery    { background: #d4edda; color: #1a6630; }
+.cat-dining     { background: #ffe5cc; color: #8b4500; }
+.cat-entertainment { background: #e8d5f5; color: #5a1f8a; }
+.cat-medical    { background: #fdd; color: #8b0000; }
+.cat-transport  { background: #cce5ff; color: #004085; }
+.cat-shopping   { background: #fce4ec; color: #880e4f; }
+.cat-utilities  { background: #e2e3e5; color: #383d41; }
+.cat-other      { background: #f0f0f0; color: #555; }
+
+/* Expanded items */
+.items-row td {
+  padding: 0 16px 12px;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.items-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fafafa;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.items-table td {
+  padding: 7px 12px;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.items-table .item-price {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: #333;
+}
+
+.history-empty {
+  text-align: center;
+  color: #aaa;
+  padding: 48px 0;
+  font-size: 0.95rem;
 }

@@ -14,7 +14,8 @@ Return ONLY a valid JSON object with these fields:
   "merchant": "full store or restaurant name",
   "date": "YYYY-MM-DD or empty string if not found",
   "total": 0.00,
-  "items": [{"name": "full item name", "price": 0.00}]
+  "items": [{"name": "full item name", "price": 0.00}],
+  "category": "one of: grocery, dining, entertainment, medical, transport, shopping, utilities, other"
 }
 
 Rules:
@@ -22,6 +23,7 @@ Rules:
 - Use the store name/logo visible on the receipt to better interpret store-specific codes
 - items should only contain purchased products (exclude tax, tip, subtotal, discount, payment method lines)
 - total is the final amount paid (after tax)
+- category: grocery=supermarket/food store, dining=restaurant/cafe/fast food, entertainment=movies/games/events, medical=pharmacy/clinic, transport=gas/transit/parking, shopping=retail/clothing/electronics, utilities=bills/services
 - Return only the JSON object, no markdown, no explanation"""
 
 

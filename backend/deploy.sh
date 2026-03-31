@@ -16,6 +16,7 @@ FUNCTION_MAP=(
   "create-upload-url:moneynote-create-upload-url-dev"
   "process-receipt-ocr:moneynote-process-receipt-ocr-dev"
   "save-receipt:moneynote-save-receipt-dev"
+  "get-receipts:moneynote-get-receipts-dev"
 )
 
 LAMBDA_NAME=""
