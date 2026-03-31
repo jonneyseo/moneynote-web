@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { parseReceipt } from '../utils/parseReceipt';
 
 const receiptSlice = createSlice({
   name: 'receipt',
@@ -12,11 +11,14 @@ const receiptSlice = createSlice({
   },
   reducers: {
     loadFromOcr(state, action) {
-      const parsed = parseReceipt(action.payload);
-      state.merchant = parsed.merchant;
-      state.date = parsed.date;
-      state.total = parsed.total;
-      state.items = parsed.items;
+      const { merchant, date, total, items } = action.payload;
+      state.merchant = merchant || '';
+      state.date = date || '';
+      state.total = total || '';
+      state.items = (items || []).map(item => ({
+        name: item.name || '',
+        price: item.price ?? '',
+      }));
       state.isParsed = true;
     },
     setField(state, action) {

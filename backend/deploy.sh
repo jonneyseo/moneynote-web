@@ -34,7 +34,23 @@ if [ -z "$LAMBDA_NAME" ]; then
 fi
 
 cd "$(dirname "$0")/$FUNCTION_DIR"
-zip -q function.zip lambda_function.py
+
+# Install dependencies if requirements.txt exists
+if [ -f "requirements.txt" ]; then
+  echo "Installing dependencies..."
+  pip3 install -q -r requirements.txt -t ./package/ \
+    --platform manylinux2014_x86_64 \
+    --python-version 3.12 \
+    --only-binary=:all: \
+    --implementation cp
+  cp lambda_function.py ./package/
+  cd package
+  zip -qr ../function.zip .
+  cd ..
+  rm -rf package
+else
+  zip -q function.zip lambda_function.py
+fi
 
 aws lambda update-function-code \
   --function-name "$LAMBDA_NAME" \
