@@ -31,11 +31,11 @@ def lambda_handler(event, context):
                 "message": "file_name and content_type are required"
             })
 
-        allowed_types = ["image/jpeg", "image/png", "image/jpg"]
+        allowed_types = ["image/jpeg", "image/jpg", "image/png", "image/heic", "image/heif"]
 
         if content_type not in allowed_types:
             return build_response(400, {
-                "message": "Only jpg, jpeg, png files are allowed for now"
+                "message": "Only jpg, png, heic files are allowed"
             })
 
         document_id = str(uuid.uuid4())

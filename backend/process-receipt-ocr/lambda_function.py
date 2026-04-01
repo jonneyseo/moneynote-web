@@ -4,6 +4,11 @@ import anthropic
 import base64
 import os
 import re
+import io
+from PIL import Image
+import pillow_heif
+
+pillow_heif.register_heif_opener()
 
 s3_client = boto3.client("s3")
 
@@ -31,6 +36,14 @@ def get_image_from_s3(bucket_name, s3_key):
     response = s3_client.get_object(Bucket=bucket_name, Key=s3_key)
     image_bytes = response["Body"].read()
     content_type = response.get("ContentType", "image/jpeg")
+
+    if content_type in ("image/heic", "image/heif"):
+        img = Image.open(io.BytesIO(image_bytes))
+        buf = io.BytesIO()
+        img.convert("RGB").save(buf, format="JPEG", quality=85)
+        image_bytes = buf.getvalue()
+        content_type = "image/jpeg"
+
     return base64.standard_b64encode(image_bytes).decode("utf-8"), content_type
 
 

@@ -1,29 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import heic2any from 'heic2any';
 
 const API_BASE_URL = '/api';
 const UPLOAD_BUCKET_NAME = 'moneynote-uploads-dev';
 
-async function normalizeFile(file) {
-  const isHeic =
-    file.type === 'image/heic' ||
-    file.type === 'image/heif' ||
-    /\.(heic|heif)$/i.test(file.name);
-
-  if (!isHeic) return file;
-
-  const blob = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.85 });
-  const jpegBlob = Array.isArray(blob) ? blob[0] : blob;
-  return new File([jpegBlob], file.name.replace(/\.(heic|heif)$/i, '.jpg'), {
-    type: 'image/jpeg',
-  });
-}
-
 export const uploadReceipt = createAsyncThunk(
   'upload/uploadReceipt',
-  async (rawFile, { rejectWithValue }) => {
+  async (file, { rejectWithValue }) => {
     try {
-      const file = await normalizeFile(rawFile);
 
       // 1. Presigned URL 요청
       const urlRes = await fetch(`${API_BASE_URL}/upload-url`, {
